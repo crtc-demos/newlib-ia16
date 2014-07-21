@@ -156,6 +156,9 @@ case "${host_cpu}" in
 		;;
 	esac
 	;;
+  ia16)
+	machine_dir=ia16
+	;;
   ia64*)
 	;;
   iq2000)
@@ -579,6 +582,9 @@ case "${host}" in
   d30v*)
 	newlib_cflags="${newlib_cflags} -DABORT_MESSAGE -DSMALL_MEMORY -DMISSING_SYSCALL_NAMES"
 	syscall_dir=
+	;;
+  *-*-elks*)
+	syscall_dir=syscalls
 	;;
   ep9312-*-*)
 	syscall_dir=syscalls

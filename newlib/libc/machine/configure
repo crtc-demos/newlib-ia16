@@ -472,6 +472,7 @@ ac_subdirs_all="$ac_subdirs_all h8500"
 ac_subdirs_all="$ac_subdirs_all hppa"
 ac_subdirs_all="$ac_subdirs_all i386"
 ac_subdirs_all="$ac_subdirs_all i960"
+ac_subdirs_all="$ac_subdirs_all ia16"
 ac_subdirs_all="$ac_subdirs_all iq2000"
 ac_subdirs_all="$ac_subdirs_all m32c"
 ac_subdirs_all="$ac_subdirs_all m32r"
@@ -10747,6 +10748,10 @@ subdirs="$subdirs i386"
 	i960)
 
 subdirs="$subdirs i960"
+ ;;
+	ia16)
+
+subdirs="$subdirs ia16"
  ;;
 	iq2000)
 

@@ -132,6 +132,9 @@ case "${target}" in
 	AC_CONFIG_SUBDIRS(iq2000)
 	config_testsuite=true
 	;;
+  ia16-*-*)
+	AC_CONFIG_SUBDIRS(ia16)
+	;;
 esac
 
 # For now, don't bother configuring testsuite

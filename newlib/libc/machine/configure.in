@@ -36,6 +36,7 @@ if test -n "${machine_dir}"; then
 	hppa) AC_CONFIG_SUBDIRS(hppa) ;;
 	i386) AC_CONFIG_SUBDIRS(i386) ;;
 	i960) AC_CONFIG_SUBDIRS(i960) ;;
+	ia16) AC_CONFIG_SUBDIRS(ia16) ;;
 	iq2000) AC_CONFIG_SUBDIRS(iq2000) ;;
 	m32c) AC_CONFIG_SUBDIRS(m32c) ;;
 	m32r) AC_CONFIG_SUBDIRS(m32r) ;;
