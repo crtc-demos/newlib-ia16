@@ -1,0 +1,171 @@
+#
+#
+
+DESTDIR =
+VPATH = @srcdir@ @srcdir@/..
+srcdir = @srcdir@
+objdir = .
+srcroot = $(srcdir)/../..
+objroot = $(objdir)/../..
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+host_alias = @host_alias@
+target_alias = @target_alias@
+target = @target@
+
+bindir = @bindir@
+libdir = @libdir@
+tooldir = $(exec_prefix)/$(target_alias)
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+# Multilib support variables.
+# TOP is used instead of MULTI{BUILD,SRC}TOP.
+MULTIDIRS =
+MULTISUBDIR =
+
+SHELL =	/bin/sh
+
+CC = @CC@
+
+AS = @AS@
+AR = @AR@
+LD = @LD@
+RANLIB = @RANLIB@
+
+# Yuk.
+OBJCOPY = $(subst ranlib,objcopy,$(RANLIB))
+
+ELKS_SYS_OBJS =	exit.o fork.o read.o write.o open.o close.o wait4.o link.o \
+		unlink.o execve.o chdir.o mknod.o chmod.o chown.o brk.o \
+		stat.o lseek.o getpid.o mount.o umount.o setuid.o getuid.o \
+		fstat.o utime.o chroot.o vfork.o access.o sync.o kill.o \
+		rename.o mkdir.o rmdir.o dup.o pipe.o dup2.o setgid.o \
+		signal.o fcntl.o ioctl.o reboot.o lstat.o symlink.o \
+		readlink.o umask.o settimeofday.o gettimeofday.o select.o \
+		readdir.o fchown.o dlload.o setsid.o socket.o bind.o \
+		listen.o accept.o connect.o knlvsn.o
+ELKS_LIB_OBJS	= elks-sbrk.o
+ELKS_CFLAGS	= -g -Os
+ELKS_SCRIPTS	= elks-separate.ld elks-combined.ld
+ELKS_BSP	= libelks.a
+ELKS_CRT0	= crt0.o
+
+OBJS		= fake-write.o sbrk.o
+CFLAGS		= -g -Os
+ASFLAGS		= --gdwarf2
+SCRIPTS		= linuxvm86.ld
+BSP		= liblinuxvm86.a
+CRT0		= linuxvm86-crt0.o
+
+# Host specific makefile fragment comes in here.
+@host_makefile_frag@
+
+# Need to augment the definition from host_makefile_frag above.
+INCLUDES += -I$(srcdir) -I. -I$(srcdir)/.. -I../libnosys
+
+#
+# build a test program for each target board. Just trying to get
+# it to link is a good test, so we ignore all the errors for now.
+#
+# all: ${MON_CRT0} ${MON_BSP}
+ifneq (,$(findstring elks,$(target)))
+all: ${ELKS_CRT0} ${ELKS_BSP} libnosys.a
+endif
+
+ifneq (,$(findstring elf,$(target)))
+all: ${CRT0} ${BSP} libnosys.a
+endif
+#
+# Here's where we build the board support packages for each target.
+#
+
+# Magic from ../cris/Makefile.in follows:
+# Toplevel build rules for various other libraries have gcc -B options
+# applied so the newlib build directory is reached, but not the target
+# libgloss directory (whose name is unknown to the toplevel configury
+# anyway).  Configury tests that check for a successful link therefore
+# fail; they can't find crt0.o and non-libc.a+libm.a libraries.  We copy
+# over all files we would install to the neighboring newlib directory.
+# Only the default crt0.o and libraries are needed, but we do them all for
+# completeness.  They're however installed from here, not from the newlib
+# build directory.
+$(objroot)/newlib/%: %
+	cp -p $^ $@
+
+# This rule, being more specific, overrides the pattern rule above.
+$(objroot)/newlib/$(BSP):
+	ln -s ../libgloss/ia16/$(BSP) $(objroot)/newlib
+$(objroot)/newlib/$(CRT0):
+	ln -s ../libgloss/ia16/$(CRT0) $(objroot)/newlib
+$(objroot)/newlib/$(ELKS_BSP):
+	ln -s ../libgloss/ia16/$(ELKS_BSP) $(objroot)/newlib
+$(objroot)/newlib/$(ELKS_CRT0):
+	ln -s ../libgloss/ia16/$(ELKS_CRT0) $(objroot)/newlib
+
+#
+# Here's where we build the test programs for each target.
+#
+.PHONY: test
+test:	
+	true
+
+#
+#
+#
+NEWLIB_CFLAGS = `if [ -d ${objroot}/newlib ]; then echo -I${objroot}/newlib/targ-include -I${srcroot}/newlib/libc/include; fi`
+CFLAGS_FOR_TARGET = ${MULTILIB} ${INCLUDES} ${NEWLIB_CFLAGS}
+
+.c.o:
+	$(CC) $(CFLAGS_FOR_TARGET) -Os -c $(CFLAGS) $<
+
+$(ELKS_CRT0) : elks-crt0.s
+	$(CC) $< -c -o $@
+
+$(ELKS_SYS_OBJS) : elks-syscalls.c elks-syscalls.h
+	$(CC) $(CFLAGS_FOR_TARGET) $(ELKS_CFLAGS) -DLABEL=_$(subst .o,,$@) \
+	-DFUNC=$(subst .o,,$@) -DSYSCALL=__SYSCALL_for_$(subst .o,,$@) \
+	-DSYSCALL_$(subst .o,,$@) $< -c -o $@
+
+$(ELKS_BSP) : $(ELKS_SYS_OBJS) $(ELKS_LIB_OBJS)
+	$(AR) rcs $@ $+
+
+libnosys.a: ../libnosys/libnosys.a
+	ln -s ../libnosys/libnosys.a $@
+
+$(BSP) : $(OBJS)
+	$(AR) rcs $@ $+
+
+.c.S:
+	${CC} ${CFLAGS_FOR_TARGET} -c $<
+
+clean mostlyclean:
+	rm -f a.out core *.i *.o *-test *.srec *.dis *.x *.hex $(BSP) 
+
+distclean maintainer-clean realclean: clean
+	rm -f Makefile config.status *~
+
+.PHONY: install info install-info clean-info
+install: 
+	set -e; for x in ${BSP} ${CRT0} ${ELKS_BSP} ${ELKS_CRT0}; do\
+	  ${INSTALL_DATA} $$x $(DESTDIR)${tooldir}/lib${MULTISUBDIR}/$$x; \
+	done
+	@for script in ${SCRIPTS}; do\
+	  ${INSTALL_DATA} ${srcdir}/$${script} $(DESTDIR)${tooldir}/lib${MULTISUBDIR}/$${script}; \
+	done
+
+
+doc:
+info:
+install-info:
+clean-info:
+
+Makefile: Makefile.in config.status @host_makefile_frag_path@
+	$(SHELL) config.status
+
+config.status: configure
+	$(SHELL) config.status --recheck
