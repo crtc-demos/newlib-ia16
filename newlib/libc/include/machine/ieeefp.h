@@ -178,6 +178,11 @@
 #define __IEEE_BIG_ENDIAN
 #endif
 
+#ifdef __ia16__
+#define __IEEE_LITTLE_ENDIAN
+#define __SMALL_BITFIELDS
+#endif
+
 #ifdef __M32R__
 #define __IEEE_BIG_ENDIAN
 #endif

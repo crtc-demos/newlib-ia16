@@ -87,6 +87,11 @@ _BEGIN_STD_C
 #define	_JBLEN	9
 #endif
 
+#ifdef __ia16__
+/* We save ax, bx, cx, dx, si, di, bp, sp, ip, es.  */
+#define _JBLEN 10
+#endif
+
 #ifdef __i386__
 # if defined(__CYGWIN__) && !defined (_JBLEN)
 #  define _JBLEN (13 * 4)

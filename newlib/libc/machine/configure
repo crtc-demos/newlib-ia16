@@ -803,6 +803,7 @@ h8500
 hppa
 i386
 i960
+ia16
 iq2000
 lm32
 m32c
@@ -11868,6 +11869,8 @@ subdirs="$subdirs a29k"
 	i386) subdirs="$subdirs i386"
  ;;
 	i960) subdirs="$subdirs i960"
+ ;;
+	ia16) subdirs="$subdirs ia16"
  ;;
 	iq2000) subdirs="$subdirs iq2000"
  ;;

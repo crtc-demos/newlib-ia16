@@ -708,6 +708,7 @@ arm
 spu
 tic6x
 iq2000
+ia16
 or1k
 libnosys'
 
@@ -2579,6 +2580,12 @@ case "${target}" in
 	;;
   or1k-*-* | or1knd-*-* )
 	subdirs="$subdirs or1k"
+
+	;;
+  ia16-*-*)
+
+
+subdirs="$subdirs ia16"
 
 	;;
 esac
