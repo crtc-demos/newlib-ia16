@@ -1,1 +1,1 @@
-/home/rask/cvssrc/linuxsimldscript
+ENTRY(_start)

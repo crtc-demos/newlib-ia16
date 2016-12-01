@@ -68,6 +68,11 @@ CRT0		= linuxvm86-crt0.o
 # Need to augment the definition from host_makefile_frag above.
 INCLUDES += -I$(srcdir) -I. -I$(srcdir)/.. -I../libnosys
 
+INSTALL_FILES = ${BSP} ${CRT0}
+ifneq (,$(findstring elks,$(target)))
+INSTALL_FILES += ${ELKS_BSP} ${ELKS_CRT0}
+endif
+
 #
 # build a test program for each target board. Just trying to get
 # it to link is a good test, so we ignore all the errors for now.
@@ -151,7 +156,7 @@ distclean maintainer-clean realclean: clean
 
 .PHONY: install info install-info clean-info
 install: 
-	set -e; for x in ${BSP} ${CRT0} ${ELKS_BSP} ${ELKS_CRT0}; do\
+	set -e; for x in ${INSTALL_FILES}; do\
 	  ${INSTALL_DATA} $$x $(DESTDIR)${tooldir}/lib${MULTISUBDIR}/$$x; \
 	done
 	@for script in ${SCRIPTS}; do\
