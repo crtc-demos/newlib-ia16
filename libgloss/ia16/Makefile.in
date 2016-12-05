@@ -55,12 +55,12 @@ ELKS_SCRIPTS	= elks-separate.ld elks-combined.ld
 ELKS_BSP	= libelks.a
 ELKS_CRT0	= crt0.o
 
-OBJS		= fake-write.o sbrk.o
+OBJS		= dos-com-write.o sbrk.o
 CFLAGS		= -g -Os
 ASFLAGS		= --gdwarf2
-SCRIPTS		= linuxvm86.ld
-BSP		= liblinuxvm86.a
-CRT0		= linuxvm86-crt0.o
+SCRIPTS		= dos-com.ld
+BSP		= libdos-com.a
+CRT0		= dos-com-crt0.o
 
 # Host specific makefile fragment comes in here.
 @host_makefile_frag@
