@@ -1,4 +1,4 @@
-/* Version of sbrk for linuxvm86 simulator.  */
+/* Version of sbrk for DOS.  */
 /*
 #include "config.h"
 */
