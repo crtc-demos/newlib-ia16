@@ -2,6 +2,7 @@
 
 OUTPUT_FORMAT(binary)
 ENTRY(_start)
+STARTUP(dos-com-crt0.o)
 MEMORY
   {
     bseglma (wx) : ORIGIN = 0x00100, LENGTH = 0x10000
