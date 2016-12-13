@@ -8,12 +8,12 @@ void *
 sbrk (incr)
      int incr;
 { 
-   extern char * _heap_end_minimum; /* Set by startup code.  */
+   extern char   __heap_end_minimum; /* Set by linker script. */
    static char * heap_end; 
    char *        prev_heap_end; 
 
    if (heap_end == 0)
-     heap_end = _heap_end_minimum; 
+     heap_end = &__heap_end_minimum; 
 
    prev_heap_end = heap_end; 
    heap_end += incr; 

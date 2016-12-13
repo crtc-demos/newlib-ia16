@@ -3,14 +3,10 @@
 OUTPUT_FORMAT(binary)
 ENTRY(_start)
 STARTUP(dos-com-crt0.o)
-MEMORY
-  {
-    bseglma (wx) : ORIGIN = 0x00100, LENGTH = 0x10000
-    bsegvma (wx) : ORIGIN = 0x00100, LENGTH = 0x10000
-  }
 
 SECTIONS
   {
+    . = 0x100;
     /* Target text sections.  */
     .text : {
 		__stext = .;
@@ -23,7 +19,7 @@ SECTIONS
 		 * GNU ld version 2.17.50.0.12-3 20070128  */
 		. = ALIGN(4);
 		__etext_padded = .;
-	} >bsegvma AT>bseglma
+	}
 	__ltext = __etext - __stext;
 	__ltext_padded = __etext_padded - __stext;
 
@@ -53,10 +49,12 @@ SECTIONS
 		__ebss = .;
 
 		/* Minimum address allowed for sbrk() to use.  */
-		_heap_end_minimum = .;
-	} >bsegvma AT>bseglma
+		__heap_end_minimum = .;
+	}
 	__ldata = __edata - __sdata;
 	__lbss  = __ebss  - __sbss;
+
+    ASSERT(. <= 0xfff8, "Error: too large for a .com file.")
 
     /DISCARD/ : { *(.*) }
   }
