@@ -3,6 +3,7 @@
 OUTPUT_FORMAT(binary)
 ENTRY(_start)
 STARTUP(dos-com-crt0.o)
+GROUP(-lc -lgcc -ldos-com -lnosys -lm)
 
 SECTIONS
   {
@@ -12,16 +13,8 @@ SECTIONS
 		__stext = .;
 		*(.text) *(.text.*)
 		__etext = .;
-
-		/* Work around linker bug.  The linker will 4-byte align the VMA
-		 * without being asked to do so, but won't do the same for the
-		 * LMA.  Result: VMA out of sync with LMA.
-		 * GNU ld version 2.17.50.0.12-3 20070128  */
-		. = ALIGN(4);
-		__etext_padded = .;
 	}
 	__ltext = __etext - __stext;
-	__ltext_padded = __etext_padded - __stext;
 
     /* Target data sections.  */
     .data : {
@@ -42,15 +35,18 @@ SECTIONS
 		*(.rodata) *(.rodata.*)
 		*(.data) *(.data.*)
 		__edata = .;
-
-		__sbss = .;
-		*(.bss) *(.bss.*)
-		*(COMMON)
-		__ebss = .;
-
-		/* Minimum address allowed for sbrk() to use.  */
-		__heap_end_minimum = .;
 	}
+
+    .bss (NOLOAD) : {
+    	 	 __sbss = .;
+                *(.bss) *(.bss.*)
+                *(COMMON)
+                __ebss = .;
+
+                /* Minimum address allowed for sbrk() to use.  */
+                __heap_end_minimum = .;
+    	}
+
 	__ldata = __edata - __sdata;
 	__lbss  = __ebss  - __sbss;
 
