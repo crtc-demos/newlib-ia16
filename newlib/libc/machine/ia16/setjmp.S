@@ -21,7 +21,7 @@
 	.global		_setjmp
 _setjmp:
 #else
-	.section	"text"
+	.section	".text"
 	.global		setjmp
 setjmp:
 #endif
@@ -42,8 +42,8 @@ setjmp:
 	leaw	6(%bp),	%ax
 	movw	%ax,	14(%bx)	# Save %sp.
 	movw	4(%bp),	%ax
-	movw	%ax,	16(%bx)	# Save %ip.
-	movw	%es,	18(%bx)	# Save %es.
+	movw	%es,	16(%bx)	# Save %es.
+	movw	%ax,	18(%bx)	# Save %ip.
 
 # Return 0 to caller.
 	xorw	%ax,	%ax
