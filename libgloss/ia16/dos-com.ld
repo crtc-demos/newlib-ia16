@@ -21,19 +21,20 @@ SECTIONS
 		__sdata = .;
 
 		/* Build lists of constructors and destructors.  */
-		___CTOR_LIST__ = .;
-		SHORT ((___CTOR_END__ - ___CTOR_LIST__) / 2 - 2);
+		__CTOR_LIST__ = .;
+		SHORT ((__CTOR_END__ - __CTOR_LIST__) / 2 - 2);
 		*(.ctors) *(SORT_BY_NAME(.ctors.*))
 		SHORT (0);
-		___CTOR_END__ = .;
-		___DTOR_LIST__ = .;
-		SHORT ((___DTOR_END__ - ___DTOR_LIST__) / 2 - 2);
+		__CTOR_END__ = .;
+		__DTOR_LIST__ = .;
+		SHORT ((__DTOR_END__ - __DTOR_LIST__) / 2 - 2);
 		*(.dtors) *(SORT_BY_NAME(.dtors.*))
 		SHORT (0);
-		___DTOR_END__ = .;
+		__DTOR_END__ = .;
 
 		*(.rodata) *(.rodata.*)
 		*(.data) *(.data.*)
+		*(.gcc_except_table)
 		__edata = .;
 	}
 
