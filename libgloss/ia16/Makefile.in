@@ -139,8 +139,12 @@ $(ELKS_SYS_OBJS) : elks-syscalls.c elks-syscalls.h
 $(ELKS_BSP) : $(ELKS_SYS_OBJS) $(ELKS_LIB_OBJS)
 	$(AR) rcs $@ $+
 
-libnosys.a: ../libnosys/libnosys.a
-	ln -s ../libnosys/libnosys.a $@
+# We need a link to libnosys.a in this directory, since this is the
+# directory used when test-compiling for configuration for other parts and
+# when running the testsuite.  By using a symbolic link, it does not
+# matter whether libnosys.a is built yet when the rule is executed.
+libnosys.a:
+	ln -s ../libnosys/libnosys.a
 
 $(BSP) : $(OBJS)
 	$(AR) rcs $@ $+

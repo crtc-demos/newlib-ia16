@@ -708,8 +708,8 @@ arm
 spu
 tic6x
 iq2000
-ia16
 or1k
+ia16
 libnosys'
 
 # Initialize some variables set by options.
@@ -2583,9 +2583,7 @@ case "${target}" in
 
 	;;
   ia16-*-*)
-
-
-subdirs="$subdirs ia16"
+	subdirs="$subdirs ia16"
 
 	;;
 esac

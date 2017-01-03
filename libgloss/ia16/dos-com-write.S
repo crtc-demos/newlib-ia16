@@ -18,6 +18,7 @@ writeLoop:
 	movb	$0x02, %ah
 	int	$0x21
 	loop	writeLoop
+	movw	8(%bp), %ax
 	popw	%si
 	popw	%bp
 	ret
