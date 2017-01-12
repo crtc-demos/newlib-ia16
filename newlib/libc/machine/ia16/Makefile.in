@@ -56,7 +56,15 @@ LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
 lib_a_AR = $(AR) $(ARFLAGS)
 lib_a_LIBADD =
-am_lib_a_OBJECTS = lib_a-setjmp.$(OBJEXT)
+am_lib_a_OBJECTS = lib_a-memccpy.$(OBJEXT) lib_a-memchr.$(OBJEXT) \
+	lib_a-memcmp.$(OBJEXT) lib_a-memcpy.$(OBJEXT) \
+	lib_a-memmove.$(OBJEXT) lib_a-mempcpy.$(OBJEXT) \
+	lib_a-memrchr.$(OBJEXT) lib_a-memset.$(OBJEXT) \
+	lib_a-rawmemchr.$(OBJEXT) lib_a-setjmp.$(OBJEXT) \
+	lib_a-stpcpy.$(OBJEXT) lib_a-stpncpy.$(OBJEXT) \
+	lib_a-strchr.$(OBJEXT) lib_a-strcmp.$(OBJEXT) \
+	lib_a-strcpy.$(OBJEXT) lib_a-strlen.$(OBJEXT) \
+	lib_a-strncmp.$(OBJEXT) lib_a-strncpy.$(OBJEXT)
 lib_a_OBJECTS = $(am_lib_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp =
@@ -114,12 +122,14 @@ MAKEINFO = @MAKEINFO@
 MAY_SUPPLY_SYSCALLS_FALSE = @MAY_SUPPLY_SYSCALLS_FALSE@
 MAY_SUPPLY_SYSCALLS_TRUE = @MAY_SUPPLY_SYSCALLS_TRUE@
 NEWLIB_CFLAGS = @NEWLIB_CFLAGS@
+NO_INCLUDE_LIST = @NO_INCLUDE_LIST@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 RANLIB = @RANLIB@
@@ -130,11 +140,6 @@ STRIP = @STRIP@
 USE_LIBTOOL_FALSE = @USE_LIBTOOL_FALSE@
 USE_LIBTOOL_TRUE = @USE_LIBTOOL_TRUE@
 VERSION = @VERSION@
-ac_ct_AR = @ac_ct_AR@
-ac_ct_AS = @ac_ct_AS@
-ac_ct_RANLIB = @ac_ct_RANLIB@
-ac_ct_READELF = @ac_ct_READELF@
-ac_ct_STRIP = @ac_ct_STRIP@
 aext = @aext@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
@@ -150,18 +155,23 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 datadir = @datadir@
+datarootdir = @datarootdir@
+docdir = @docdir@
+dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 host = @host@
 host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
+htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
 libm_machine_dir = @libm_machine_dir@
+localedir = @localedir@
 localstatedir = @localstatedir@
 lpfx = @lpfx@
 machine_dir = @machine_dir@
@@ -170,8 +180,10 @@ mkdir_p = @mkdir_p@
 newlib_basedir = @newlib_basedir@
 oext = @oext@
 oldincludedir = @oldincludedir@
+pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
+psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sys_dir = @sys_dir@
@@ -181,7 +193,26 @@ AUTOMAKE_OPTIONS = cygnus
 INCLUDES = $(NEWLIB_CFLAGS) $(CROSS_CFLAGS) $(TARGET_CFLAGS)
 AM_CCASFLAGS = $(INCLUDES)
 noinst_LIBRARIES = lib.a
-lib_a_SOURCES = setjmp.S
+lib_a_SOURCES = \
+	memccpy.S \
+	memchr.S \
+	memcmp.S \
+	memcpy.S \
+	memmove.S \
+	mempcpy.S \
+	memrchr.S \
+	memset.S \
+	rawmemchr.S \
+	setjmp.S \
+	stpcpy.S \
+	stpncpy.S \
+	strchr.S \
+	strcmp.S \
+	strcpy.S \
+	strlen.S \
+	strncmp.S \
+	strncpy.S
+
 lib_a_CCASFLAGS = $(AM_CCASFLAGS)
 lib_a_CFLAGS = $(AM_CFLAGS)
 ACLOCAL_AMFLAGS = -I ../../..
@@ -243,11 +274,113 @@ distclean-compile:
 .S.obj:
 	$(CCASCOMPILE) -c `$(CYGPATH_W) '$<'`
 
+lib_a-memccpy.o: memccpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memccpy.o `test -f 'memccpy.S' || echo '$(srcdir)/'`memccpy.S
+
+lib_a-memccpy.obj: memccpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memccpy.obj `if test -f 'memccpy.S'; then $(CYGPATH_W) 'memccpy.S'; else $(CYGPATH_W) '$(srcdir)/memccpy.S'; fi`
+
+lib_a-memchr.o: memchr.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memchr.o `test -f 'memchr.S' || echo '$(srcdir)/'`memchr.S
+
+lib_a-memchr.obj: memchr.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memchr.obj `if test -f 'memchr.S'; then $(CYGPATH_W) 'memchr.S'; else $(CYGPATH_W) '$(srcdir)/memchr.S'; fi`
+
+lib_a-memcmp.o: memcmp.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memcmp.o `test -f 'memcmp.S' || echo '$(srcdir)/'`memcmp.S
+
+lib_a-memcmp.obj: memcmp.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memcmp.obj `if test -f 'memcmp.S'; then $(CYGPATH_W) 'memcmp.S'; else $(CYGPATH_W) '$(srcdir)/memcmp.S'; fi`
+
+lib_a-memcpy.o: memcpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memcpy.o `test -f 'memcpy.S' || echo '$(srcdir)/'`memcpy.S
+
+lib_a-memcpy.obj: memcpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memcpy.obj `if test -f 'memcpy.S'; then $(CYGPATH_W) 'memcpy.S'; else $(CYGPATH_W) '$(srcdir)/memcpy.S'; fi`
+
+lib_a-memmove.o: memmove.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memmove.o `test -f 'memmove.S' || echo '$(srcdir)/'`memmove.S
+
+lib_a-memmove.obj: memmove.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memmove.obj `if test -f 'memmove.S'; then $(CYGPATH_W) 'memmove.S'; else $(CYGPATH_W) '$(srcdir)/memmove.S'; fi`
+
+lib_a-mempcpy.o: mempcpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-mempcpy.o `test -f 'mempcpy.S' || echo '$(srcdir)/'`mempcpy.S
+
+lib_a-mempcpy.obj: mempcpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-mempcpy.obj `if test -f 'mempcpy.S'; then $(CYGPATH_W) 'mempcpy.S'; else $(CYGPATH_W) '$(srcdir)/mempcpy.S'; fi`
+
+lib_a-memrchr.o: memrchr.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memrchr.o `test -f 'memrchr.S' || echo '$(srcdir)/'`memrchr.S
+
+lib_a-memrchr.obj: memrchr.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memrchr.obj `if test -f 'memrchr.S'; then $(CYGPATH_W) 'memrchr.S'; else $(CYGPATH_W) '$(srcdir)/memrchr.S'; fi`
+
+lib_a-memset.o: memset.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memset.o `test -f 'memset.S' || echo '$(srcdir)/'`memset.S
+
+lib_a-memset.obj: memset.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-memset.obj `if test -f 'memset.S'; then $(CYGPATH_W) 'memset.S'; else $(CYGPATH_W) '$(srcdir)/memset.S'; fi`
+
+lib_a-rawmemchr.o: rawmemchr.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-rawmemchr.o `test -f 'rawmemchr.S' || echo '$(srcdir)/'`rawmemchr.S
+
+lib_a-rawmemchr.obj: rawmemchr.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-rawmemchr.obj `if test -f 'rawmemchr.S'; then $(CYGPATH_W) 'rawmemchr.S'; else $(CYGPATH_W) '$(srcdir)/rawmemchr.S'; fi`
+
 lib_a-setjmp.o: setjmp.S
 	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-setjmp.o `test -f 'setjmp.S' || echo '$(srcdir)/'`setjmp.S
 
 lib_a-setjmp.obj: setjmp.S
 	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-setjmp.obj `if test -f 'setjmp.S'; then $(CYGPATH_W) 'setjmp.S'; else $(CYGPATH_W) '$(srcdir)/setjmp.S'; fi`
+
+lib_a-stpcpy.o: stpcpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-stpcpy.o `test -f 'stpcpy.S' || echo '$(srcdir)/'`stpcpy.S
+
+lib_a-stpcpy.obj: stpcpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-stpcpy.obj `if test -f 'stpcpy.S'; then $(CYGPATH_W) 'stpcpy.S'; else $(CYGPATH_W) '$(srcdir)/stpcpy.S'; fi`
+
+lib_a-stpncpy.o: stpncpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-stpncpy.o `test -f 'stpncpy.S' || echo '$(srcdir)/'`stpncpy.S
+
+lib_a-stpncpy.obj: stpncpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-stpncpy.obj `if test -f 'stpncpy.S'; then $(CYGPATH_W) 'stpncpy.S'; else $(CYGPATH_W) '$(srcdir)/stpncpy.S'; fi`
+
+lib_a-strchr.o: strchr.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strchr.o `test -f 'strchr.S' || echo '$(srcdir)/'`strchr.S
+
+lib_a-strchr.obj: strchr.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strchr.obj `if test -f 'strchr.S'; then $(CYGPATH_W) 'strchr.S'; else $(CYGPATH_W) '$(srcdir)/strchr.S'; fi`
+
+lib_a-strcmp.o: strcmp.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strcmp.o `test -f 'strcmp.S' || echo '$(srcdir)/'`strcmp.S
+
+lib_a-strcmp.obj: strcmp.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strcmp.obj `if test -f 'strcmp.S'; then $(CYGPATH_W) 'strcmp.S'; else $(CYGPATH_W) '$(srcdir)/strcmp.S'; fi`
+
+lib_a-strcpy.o: strcpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strcpy.o `test -f 'strcpy.S' || echo '$(srcdir)/'`strcpy.S
+
+lib_a-strcpy.obj: strcpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strcpy.obj `if test -f 'strcpy.S'; then $(CYGPATH_W) 'strcpy.S'; else $(CYGPATH_W) '$(srcdir)/strcpy.S'; fi`
+
+lib_a-strlen.o: strlen.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strlen.o `test -f 'strlen.S' || echo '$(srcdir)/'`strlen.S
+
+lib_a-strlen.obj: strlen.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strlen.obj `if test -f 'strlen.S'; then $(CYGPATH_W) 'strlen.S'; else $(CYGPATH_W) '$(srcdir)/strlen.S'; fi`
+
+lib_a-strncmp.o: strncmp.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strncmp.o `test -f 'strncmp.S' || echo '$(srcdir)/'`strncmp.S
+
+lib_a-strncmp.obj: strncmp.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strncmp.obj `if test -f 'strncmp.S'; then $(CYGPATH_W) 'strncmp.S'; else $(CYGPATH_W) '$(srcdir)/strncmp.S'; fi`
+
+lib_a-strncpy.o: strncpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strncpy.o `test -f 'strncpy.S' || echo '$(srcdir)/'`strncpy.S
+
+lib_a-strncpy.obj: strncpy.S
+	$(CCAS) $(lib_a_CCASFLAGS) $(CCASFLAGS) -c -o lib_a-strncpy.obj `if test -f 'strncpy.S'; then $(CYGPATH_W) 'strncpy.S'; else $(CYGPATH_W) '$(srcdir)/strncpy.S'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

@@ -1,0 +1,27 @@
+	.arch i8086,jumps
+	.code16
+	.att_syntax prefix
+
+	.section	".text"
+	.global		strcpy
+strcpy:
+	movw	%sp,	%bx
+	pushw	%si
+	pushw	%di
+	pushw	%es
+	movw	2(%bx), %di
+	movw	4(%bx), %si
+	movw	%ds,	%ax
+	movw	%ax,	%es
+	movw	%di,	%bx
+.L1:
+	lodsb
+	stosb
+	testb	%al,	%al
+	jnz	.L1
+
+	movw	%bx,	%ax
+	popw	%es
+	popw	%di
+	popw	%si
+	ret
