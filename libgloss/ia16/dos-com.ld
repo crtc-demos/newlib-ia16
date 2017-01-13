@@ -45,7 +45,7 @@ SECTIONS
                 __ebss = .;
 
                 /* Minimum address allowed for sbrk() to use.  */
-                __heap_end_minimum = .;
+                __heap_end_minimum = ALIGN(8);
     	}
 
 	__ldata = __edata - __sdata;
