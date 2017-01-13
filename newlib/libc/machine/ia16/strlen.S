@@ -5,17 +5,19 @@
 	.section	".text"
 	.global		strlen
 strlen:
-	pushw	%si
-	movw	%sp,	%bx
-	movw	4(%bx),	%si
-	movw	%si,	%bx
-.L1:
-	lodsb
-	cmpb	$0,	%al
-	jne	.L1
-
-	movw	%si,	%ax
+	pushw   %di
+	movw    %sp,    %bx
+	pushw   %es
+	movw    %ds,    %ax
+	movw    %ax,    %es
+	movw    4(%bx), %di
+	movw	%di,	%bx
+	xorb	%ax,	%ax
+	movw    $-1,    %cx
+	repne   scasb
+	movw    %di,    %ax
 	subw	%bx,	%ax
-	decw	%ax
-	popw	%si
+	decw    %ax
+	popw    %es
+	popw    %di
 	ret
