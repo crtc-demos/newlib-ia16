@@ -4,7 +4,9 @@
 	.code16
 
 	.text
+	.global __dso_handle
 	.global _start
+__dso_handle:
 _start:
 	xorw	%ax, %ax
 	movw	$__sbss, %di
