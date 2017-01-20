@@ -9,6 +9,7 @@ AM_CCASFLAGS = $(INCLUDES)
 noinst_LIBRARIES = lib.a
 
 lib_a_SOURCES = \
+	abort.c \
 	memccpy.S \
 	memchr.S \
 	memcmp.S \
