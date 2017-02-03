@@ -3,17 +3,18 @@
 	.arch i8086
 	.code16
 
-	.text
-	.global __dso_handle
+	.section .startupA
 	.global _start
-__dso_handle:
 _start:
 	xorw	%ax, %ax
 	movw	$__sbss, %di
 	movw	$__lbss, %cx
 	cld
-	rep stosb
+	rep stosw
 
+	.section .startupB
+
+	xorwq	%ax, %ax
 	pushw	%ax
 	pushw	%ax
 	pushw	%ax
@@ -23,13 +24,12 @@ _start:
 	pushw	%ax
 	call	exit
 
-	// We should never reach here.
-crash:	jmp	crash
-
 	.global _exit
 _exit:
+
+	.section .startupC
+
 	movw	%sp, %bp
 	movw	2(%bp), %ax
 	movb	$0x4c, %ah
 	int	$0x21
-	jmp	crash

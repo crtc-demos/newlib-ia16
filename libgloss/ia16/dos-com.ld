@@ -2,8 +2,8 @@
 
 OUTPUT_FORMAT(binary)
 ENTRY(_start)
-STARTUP(dos-com-crt0.o)
-GROUP(-lc -lgcc -ldos-com -lnosys -lm)
+INPUT(crtbegin.o crtend.o dos-com-crt0.o)
+GROUP(-lc -lgcc -ldos-com -lm)
 
 SECTIONS
   {
@@ -11,6 +11,11 @@ SECTIONS
     /* Target text sections.  */
     .text : {
 		__stext = .;
+		*(.startupA)
+		*(.init)
+		*(.startupB)
+		*(.fini)
+		*(.startupC)
 		*(.text) *(.text.*)
 		__etext = .;
 	}
@@ -21,16 +26,15 @@ SECTIONS
 		__sdata = .;
 
 		/* Build lists of constructors and destructors.  */
-		__CTOR_LIST__ = .;
-		SHORT ((__CTOR_END__ - __CTOR_LIST__) / 2 - 2);
-		*(.ctors) *(SORT_BY_NAME(.ctors.*))
-		SHORT (0);
-		__CTOR_END__ = .;
-		__DTOR_LIST__ = .;
-		SHORT ((__DTOR_END__ - __DTOR_LIST__) / 2 - 2);
-		*(.dtors) *(SORT_BY_NAME(.dtors.*))
-		SHORT (0);
-		__DTOR_END__ = .;
+		KEEP (*crtbegin*.o(.ctors))
+		KEEP (*(EXCLUDE_FILE (*crtend*.o ) .ctors))
+		KEEP (*(SORT(.ctors.*)))
+		KEEP (*(.ctors))
+
+		KEEP (*crtbegin*.o(.dtors))
+		KEEP (*(EXCLUDE_FILE (*crtend*.o ) .dtors))
+		KEEP (*(SORT(.dtors.*)))
+		KEEP (*(.dtors))
 
 		*(.rodata) *(.rodata.*)
 		*(.data) *(.data.*)
@@ -49,7 +53,7 @@ SECTIONS
     	}
 
 	__ldata = __edata - __sdata;
-	__lbss  = __ebss  - __sbss;
+	__lbss  = ((__ebss + 1) - __sbss) / 2;
 
     ASSERT(. <= 0xfff8, "Error: too large for a .com file.")
 

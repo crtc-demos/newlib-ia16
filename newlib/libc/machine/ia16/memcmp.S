@@ -39,8 +39,8 @@ memcmp:
 	popw	%si
 	ret
 .L1:
-	movb	-2(%si),	%ax
-	movb	-2(%di),	%dx
+	movw	-2(%si),	%ax
+	movw	-2(%di),	%dx
 	cmpb	%al,	%dl
 	je	.L4
 	xorb	%ah,	%ah
