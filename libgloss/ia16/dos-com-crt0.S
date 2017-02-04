@@ -14,7 +14,7 @@ _start:
 
 	.section .startupB
 
-	xorwq	%ax, %ax
+	xorw	%ax, %ax
 	pushw	%ax
 	pushw	%ax
 	pushw	%ax
