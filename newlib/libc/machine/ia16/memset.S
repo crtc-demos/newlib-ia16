@@ -16,9 +16,8 @@ memset:
 	movb	%al,	%ah
 	shrw	$1,	%cx
 	rep	stosw
-	jnc	.L1
-	stosb
-.L1:
+	adcw	%cx,	%cx
+	rep	stosb
 	movw	2(%bx),	%ax
 	popw	%es
 	popw	%di

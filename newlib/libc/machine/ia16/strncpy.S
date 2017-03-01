@@ -25,8 +25,8 @@ strncpy:
 	xorw	%ax,	%ax
 	shrw	$1,	%cx
 	rep	stosw
-	jnc	.L2
-	stosb
+	adcw	%cx,	%cx
+	rep	stosb
 .L2:
 	movw	%bx,	%ax
 	popw	%es

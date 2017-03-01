@@ -16,9 +16,8 @@ mempcpy:
 	movw	6(%bx),	%cx
 	shrw	$1,	%cx
 	rep	movsw
-	jnc	.L1
-	movsb
-.L1:
+	adcw	%cx,	%cx
+	rep	movsb
 	movw	%di,	%ax
 	popw	%es
 	popw	%di

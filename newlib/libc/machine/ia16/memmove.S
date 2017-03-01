@@ -66,9 +66,8 @@ memmove:
 	decw	%di
 	shrw	$1,	%cx
 	rep	movsw
-	jnc	.L5
-	movsb
-.L5:
+	adcw	%cx,	%cx
+	rep	movsb
 	popw	%es
 	popw	%di
 	popw	%si
