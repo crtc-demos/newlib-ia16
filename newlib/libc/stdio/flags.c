@@ -73,11 +73,13 @@ _DEFUN(__sflags, (ptr, mode, optr),
 	  m |= O_BINARY;
 #endif
 	  break;
-#ifdef __CYGWIN__
 	case 't':
+#ifdef __CYGWIN__
 	  m |= O_TEXT;
-	  break;
+#elif defined(__ia16__)
+	  ret |= __SCLE;
 #endif
+	  break;
 #if defined (O_CLOEXEC) && defined (_GLIBC_EXTENSION)
 	case 'e':
 	  m |= O_CLOEXEC;

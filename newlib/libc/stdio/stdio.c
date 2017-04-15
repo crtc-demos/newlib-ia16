@@ -39,7 +39,7 @@ _DEFUN(__sread, (ptr, cookie, buf, n),
   register FILE *fp = (FILE *) cookie;
   register ssize_t ret;
 
-#ifdef __SCLE
+#if defined(__SCLE) && defined(O_BINARY)
   int oldmode = 0;
   if (fp->_flags & __SCLE)
     oldmode = setmode (fp->_file, O_BINARY);
@@ -47,7 +47,7 @@ _DEFUN(__sread, (ptr, cookie, buf, n),
 
   ret = _read_r (ptr, fp->_file, buf, n);
 
-#ifdef __SCLE
+#if defined(__SCLE) && defined(O_BINARY)
   if (oldmode)
     setmode (fp->_file, oldmode);
 #endif
@@ -81,7 +81,7 @@ _DEFUN(__swrite, (ptr, cookie, buf, n),
 {
   register FILE *fp = (FILE *) cookie;
   ssize_t w;
-#ifdef __SCLE
+#if defined(__SCLE) && defined(O_BINARY)
   int oldmode=0;
 #endif
 
@@ -89,14 +89,14 @@ _DEFUN(__swrite, (ptr, cookie, buf, n),
     _lseek_r (ptr, fp->_file, (_off_t) 0, SEEK_END);
   fp->_flags &= ~__SOFF;	/* in case O_APPEND mode is set */
 
-#ifdef __SCLE
+#if defined(__SCLE) && defined(O_BINARY)
   if (fp->_flags & __SCLE)
     oldmode = setmode (fp->_file, O_BINARY);
 #endif
 
   w = _write_r (ptr, fp->_file, buf, n);
 
-#ifdef __SCLE
+#if defined(__SCLE) && defined(O_BINARY)
   if (oldmode)
     setmode (fp->_file, oldmode);
 #endif
@@ -143,6 +143,11 @@ _DEFUN(__stextmode, (fd),
 #ifdef __CYGWIN__
   extern int _cygwin_istext_for_stdio (int);
   return _cygwin_istext_for_stdio (fd);
+#elif defined (__ia16__)
+  struct stat buf;
+  if (fstat(fd, &buf) != 0)
+    return 0;
+  return S_ISCHR(buf.st_mode);
 #else
   return 0;
 #endif

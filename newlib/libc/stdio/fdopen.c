@@ -119,10 +119,14 @@ _DEFUN(_fdopen_r, (ptr, fd, mode),
 
 #ifdef __SCLE
   /* Explicit given mode results in explicit setting mode on fd */
+#ifdef O_BINARY
   if (oflags & O_BINARY)
     setmode (fp->_file, O_BINARY);
+#endif
+#ifdef O_TEXT
   else if (oflags & O_TEXT)
     setmode (fp->_file, O_TEXT);
+#endif
   if (__stextmode (fp->_file))
     fp->_flags |= __SCLE;
 #endif

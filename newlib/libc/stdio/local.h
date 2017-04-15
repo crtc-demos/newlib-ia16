@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-#ifdef __SCLE
+#if defined(__SCLE) && !defined(__ia16__)
 # include <io.h>
 #endif
 
