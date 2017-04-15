@@ -53,7 +53,9 @@ SECTIONS
     	}
 
 	__ldata = __edata - __sdata;
-	__lbss  = ((__ebss + 1) - __sbss) / 2;
+	__lbss0 = __ebss - __sbss;
+	__lbss1 = __lbss0 + 1;
+	__lbss = __lbss1 / 2;
 
     ASSERT(. <= 0xfff8, "Error: too large for a .com file.")
 
