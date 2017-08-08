@@ -1,4 +1,10 @@
-# Startup code for a DOS .com file.
+/* Startup code for a "tiny" model DOS .com file with combined text and data
+   segment, or a "small" model DOS .exe file with one text segment and one
+   separate data segment.  */
+
+#if !defined TINY && !defined SMALL
+#error "no memory model defined -- please use either -DTINY or -DSMALL"
+#endif
 
 	.arch i8086
 	.code16
@@ -6,15 +12,38 @@
 	.section .startupA
 	.global _start
 _start:
+#ifndef TINY
+	pushw	%ss
+	popw	%es
+#endif
 	xorw	%ax, %ax
 	movw	$__sbss, %di
 	movw	$__lbss, %cx
 	cld
 	rep	stosw
+#ifndef TINY
+	pushw	%ds
+	pushw	%ss
+	popw	%ds
+#endif
+
+#ifndef TINY
+/* For the small memory model, we need to copy the command line arguments
+   out to the data segment, rather than modify them in place in DOS's DTA ---
+   since the DTA is outside the data segment.  */
+	.lcomm	.Largv,	128
+/* We currently do not use the PSP segment value after startup, so we can
+   overlap .Lpsp with .Largv.  This may change in the future.  */
+	.set	.Lpsp,	.Largv
+#endif
 
 	.section .startupB
 
 	# Find length of environment + progname
+#ifndef TINY
+	popw	%ds
+	movw	%ds, %ss:.Lpsp
+#endif
 	movw	0x2c,	%es
 	xorw	%di,	%di
 	cld
@@ -42,8 +71,10 @@ _start:
 	rep	movsb
 
 	# Push pointers to environment + progname
+#ifdef TINY
 	pushw	%es
 	popw	%ds
+#endif
 	movw	%sp,	%di
 	pushw	%ax		# envp ends with null pointer
 .Lpush_env_pointers:
@@ -62,7 +93,12 @@ _start:
 	# Parse command tail and push argument pointers
 	xorw	%bx,	%bx	# argc
 	movw	$0x81,	%si
+#ifdef TINY
 	movw	%si,	%di
+#else
+	movw	$.Largv, %di
+	movw	%ss:(.Lpsp-.Largv)(%di), %ds
+#endif
 	movw	$1,	%cx
 
 .Lspace:
@@ -93,6 +129,10 @@ _start:
 	pushw	%bx
 	incw	%cx
 .Lfinish:
+#ifndef TINY
+	pushw	%ss
+	popw	%ds
+#endif
 	movw	%sp,	%si
 	movw	%sp,	%di
 	movw	%dx,	%bx
